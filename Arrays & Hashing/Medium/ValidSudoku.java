@@ -23,21 +23,27 @@
 
 class Solution {
     public boolean isValidSudoku(char[][] board) {
-        HashSet<String> seen = new HashSet();
-        for(int i = 0; i < 9; i++){
-            
-            for(int j = 0; j < 9; j++){
-                char current_val = board[i][j];
-                if(current_val != '.'){
-                    if(!seen.add(current_val + "found in row" + i) || 
-                    !seen.add(current_val + "found in column" + j)||
-                    !seen.add(current_val + "found in sub box" + i/3 + "-" + j/3)) //Checks each 3x3 box
-                    return false; 
+        boolean[][] rows = new boolean[9][9];
+        boolean[][] cols = new boolean[9][9];
+        boolean[][] boxes = new boolean[9][9];
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char c = board[i][j];
+                if (c == '.') continue;
+
+                int num = c - '1'; // Convert '1'-'9' to 0-8
+                int boxIndex = (i / 3) * 3 + (j / 3);
+
+                if (rows[i][num] || cols[j][num] || boxes[boxIndex][num]) {
+                    return false;
                 }
+
+                rows[i][num] = true;
+                cols[j][num] = true;
+                boxes[boxIndex][num] = true;
             }
         }
         return true;
     }
 }
-
-//if we're dealing with unique values, we'll use hashsets as they only store unique values. use strings so we don't need 3 seperate hashsets, but just one outer hashset.
